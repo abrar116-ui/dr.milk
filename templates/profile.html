@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Dr.milk Luxury</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 4rem auto;
+        }
+
+        .form-glass {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .input-premium {
+            border: 1px solid #eee;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .input-premium:focus {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(26, 60, 52, 0.05);
+            outline: none;
+        }
+    </style>
+</head>
+
+<body class="bg-cream">
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container px-5">
+            <a class="brand-logo" href="/">Dr.milk</a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <a href="/orders" class="nav-link"><i class="bi bi-clock-history me-1"></i>Order History</a>
+                <a href="/" class="nav-link">Return to Shop</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container profile-container">
+        <div class="text-center mb-5">
+            <span class="product-category">Member Account</span>
+            <h1 class="display-4">Personal Profile</h1>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} rounded-4 mb-4 border-0 shadow-sm">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- Monthly Insights Section -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="form-glass h-100 d-flex flex-column align-items-center justify-content-center text-center py-4 clickable-card"
+                    data-bs-toggle="modal" data-bs-target="#monthSheetModal"
+                    style="cursor: pointer; transition: transform 0.2s;">
+                    <span class="product-category mb-2">{{ stats.month_name }} Deliveries</span>
+                    <h2 class="display-5 fw-bold text-primary">{{ stats.total_delivery_days }}</h2>
+                    <p class="text-muted small mb-0">Total Active Delivery Days</p>
+                    <div class="mt-2 text-center">
+                        <span class="badge rounded-pill bg-light text-primary border border-primary px-3 py-1 fw-bold"
+                            style="font-size: 0.7rem;">
+                            <i class="bi bi-eye me-1"></i> VIEW FULL SHEET
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-glass h-100 py-4 px-4 d-flex flex-column justify-content-center">
+                    <span class="product-category mb-2 d-block">Monthly Investment</span>
+                    <h2 class="display-6 fw-bold text-success mb-1">₹{{ stats.total_spent|int }}</h2>
+                    <p class="text-muted small mb-0">Total order value for {{ stats.month_name }}</p>
+                    <div class="mt-3 d-flex flex-wrap gap-2">
+                        {% for product in stats.ordered_products %}
+                        <span class="badge rounded-pill bg-light text-primary border border-primary px-2 py-1 small"
+                            style="font-size: 0.65rem;">{{ product }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Month Sheet Modal -->
+        <div class="modal fade" id="monthSheetModal" tabindex="-1" aria-labelledby="monthSheetModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                    <div class="modal-header border-0 bg-primary text-white p-4">
+                        <div class="d-flex align-items-center text-start">
+                            <i class="bi bi-calendar-check fs-2 me-3"></i>
+                            <div>
+                                <h5 class="modal-title fw-bold mb-0" id="monthSheetModalLabel">{{ stats.month_name }}
+                                    Delivery Sheet</h5>
+                                <p class="small opacity-75 mb-0">Detailed view of your subscription schedule</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead style="background: #f8f9fa;">
+                                    <tr>
+                                        <th class="ps-4 py-3 border-0">Date</th>
+                                        <th class="py-3 border-0">Day</th>
+                                        <th class="py-3 border-0">Products</th>
+                                        <th class="text-end pe-4 py-3 border-0">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for day in stats.month_sheet %}
+                                    <tr
+                                        class="{{ 'opacity-75 bg-light text-muted' if day.is_past }} {{ 'table-primary fw-bold' if day.is_today }}">
+                                        <td class="ps-4">
+                                            {{ day.date }}
+                                            {% if day.is_today %}
+                                            <span class="badge bg-primary ms-1 small"
+                                                style="font-size: 0.6rem;">TODAY</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ day.day }}</td>
+                                        <td>
+                                            {% for del in day.deliveries %}
+                                            <div class="small">
+                                                <i class="bi bi-droplet-half text-primary small"></i>
+                                                {{ del.product }} ({{ del.size }} &times; {{ del.quantity }})
+                                            </div>
+                                            {% endfor %}
+                                        </td>
+                                        <td class="text-end pe-4 fw-bold">₹{{ day.deliveries|sum(attribute='amount')|int
+                                            }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot style="background: #fdfaf3;" class="border-top border-4">
+                                    <tr>
+                                        <td colspan="3" class="ps-4 py-3 fw-bold text-uppercase small text-muted">Total
+                                            Estimated Monthly Value</td>
+                                        <td class="text-end pe-4 py-3 fs-5 fw-bold text-primary">₹{{
+                                            stats.total_spent|int }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 p-4 bg-light">
+                        <div class="w-100 d-flex gap-2">
+                            <button type="button" class="btn btn-outline-primary flex-grow-1 rounded-pill"
+                                onclick="window.print()">
+                                <i class="bi bi-printer me-2"></i>Print Sheet
+                            </button>
+                            <button type="button" class="btn btn-primary flex-grow-1 rounded-pill py-2 shadow-sm"
+                                data-bs-dismiss="modal">Close View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-glass">
+            <form method="POST">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Username</label>
+                        <input type="text" class="form-control input-premium" value="{{ user.username }}" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Email Address</label>
+                        <input type="email" class="form-control input-premium" value="{{ user.email or '' }}" disabled>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Phone Number</label>
+                        <input type="text" name="phone" class="form-control input-premium"
+                            value="{{ user.phone or '' }}" placeholder="+91 ...">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Full Home Address</label>
+                        <textarea name="address" class="form-control input-premium" rows="3"
+                            placeholder="Street, Area, etc.">{{ user.address or '' }}</textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Society / Bungalow</label>
+                        <input type="text" name="society" class="form-control input-premium"
+                            value="{{ user.society or '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Block</label>
+                        <input type="text" name="block" class="form-control input-premium"
+                            value="{{ user.block or '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Flat No.</label>
+                        <input type="text" name="flat_number" class="form-control input-premium"
+                            value="{{ user.flat_number or '' }}">
+                    </div>
+                </div>
+
+                <div class="mt-5 pt-4 border-top">
+                    <button type="submit" class="btn-premium w-100">Update Profile Details</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="text-muted small">Registered on {{ user.created_at.strftime('%d %B %Y') }}</p>
+        </div>
+    </div>
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

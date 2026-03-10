@@ -1,0 +1,396 @@
+/* ==============================================
+   DR. MILK PREMIUM DESIGN SYSTEM
+   "Elevating Dairy to Luxury"
+   ============================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+:root {
+    /* Sophisticated Farm Palette */
+    --primary: #1B3022;
+    /* Deep Forest Green */
+    --primary-light: #2C4A36;
+    --accent: #D4AF37;
+    /* Gold/Champagne */
+    --cream: #FDF5E6;
+    /* Rich Cream */
+    --white: #FFFFFF;
+    --text-main: #2D2D2D;
+    --text-muted: #6B7280;
+
+    /* UX Tokens */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --border-radius-lg: 24px;
+    --border-radius-sm: 12px;
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --shadow-premium: 0 20px 50px rgba(27, 48, 34, 0.15);
+    --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.bg-accent {
+    background-color: var(--accent) !important;
+}
+
+.text-accent {
+    color: var(--accent) !important;
+}
+
+/* ==============================================
+   BASE STYLES
+   ============================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-main);
+    background-color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+.brand-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+/* ==============================================
+   LAYOUT & CONTAINERS
+   ============================================== */
+
+.container-custom {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+section {
+    padding: 8rem 0;
+}
+
+.bg-cream {
+    background-color: var(--cream);
+}
+
+/* ==============================================
+   NAVBAR (GLASSMORPHISM)
+   ============================================== */
+
+.navbar {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+    transition: var(--transition-smooth);
+    padding: 1rem 0;
+}
+
+.brand-logo {
+    font-size: 2rem;
+    color: var(--primary);
+    text-decoration: none;
+    letter-spacing: -1px;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: var(--text-main);
+    margin-left: 2rem;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: var(--transition-smooth);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* ==============================================
+   HERO SECTION (CINEMATIC)
+   ============================================== */
+
+.hero-section {
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--white);
+    position: relative;
+}
+
+.hero-content {
+    max-width: 900px;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 5rem;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+    animation: fadeInUp 1.2s ease-out;
+}
+
+/* ==============================================
+   BUTTONS
+   ============================================== */
+
+.btn-premium {
+    background: var(--primary);
+    color: var(--white);
+    padding: 1.2rem 3rem;
+    border-radius: 100px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: var(--transition-smooth);
+    border: 2px solid var(--primary);
+    cursor: pointer;
+}
+
+.btn-premium:hover {
+    background: transparent;
+    color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.btn-accent {
+    background: var(--accent);
+    color: var(--white);
+    border: 2px solid var(--accent);
+}
+
+.btn-accent:hover {
+    background: transparent;
+    color: var(--accent);
+}
+
+/* ==============================================
+   PRODUCT CARDS
+   ============================================== */
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-top: 4rem;
+}
+
+.product-card {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-15px);
+    box-shadow: var(--shadow-premium);
+}
+
+.product-image-container {
+    height: 300px;
+    /* Slightly reduced for better balance */
+    overflow: hidden;
+    background: #fdf5e6;
+    /* Fallback to cream if image fails */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 1rem;
+    /* Add padding so images don't touch edges */
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Changed from cover to contain to ensure full image is visible */
+    transition: var(--transition-smooth);
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+.product-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: var(--accent);
+    color: var(--white);
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.product-info {
+    padding: 2.5rem;
+}
+
+.product-category {
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.product-title {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.product-desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    height: 3em;
+    overflow: hidden;
+}
+
+.product-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 1.5rem;
+}
+
+.price-tag {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* ==============================================
+   SUBSCRIPTION OPTIONS
+   ============================================== */
+
+.subscription-toggle {
+    background: var(--cream);
+    padding: 0.3rem;
+    border-radius: 50px;
+    display: inline-flex;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.sub-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.6rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.sub-btn.active {
+    background: var(--white);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ==============================================
+   ANIMATIONS
+   ============================================== */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==============================================
+   RESPONSIVE
+   ============================================== */
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    section {
+        padding: 5rem 0;
+    }
+}
+
+/* Side Drawer Cart Styling */
+.cart-drawer {
+    position: fixed;
+    right: -450px;
+    top: 0;
+    width: 400px;
+    height: 100vh;
+    background: var(--white);
+    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.1);
+    z-index: 1100;
+    transition: var(--transition-smooth);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-drawer.open {
+    right: 0;
+}
+
+.cart-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1050;
+    display: none;
+}
+
+.cart-overlay.show {
+    display: block;
+}
