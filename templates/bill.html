@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -161,4 +162,169 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Confirmed | Dr.milk Premium</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom Premium CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .invoice-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-premium);
+            overflow: hidden;
+            max-width: 900px;
+            margin: 4rem auto;
+        }
+
+        .invoice-header {
+            background: var(--primary);
+            color: white;
+            padding: 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .invoice-header i {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .invoice-body {
+            padding: 4rem;
+        }
+
+        .table-premium th {
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--cream);
+            padding: 1.5rem 0;
+        }
+
+        .table-premium td {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+        .invoice-footer {
+            background: var(--cream);
+            padding: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+
+            .invoice-card {
+                margin: 0;
+                box-shadow: none;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-cream">
+
+    <div class="container">
+        <div class="invoice-card">
+            <div class="invoice-header">
+                <i class="bi bi-patch-check"></i>
+                <h1 class="display-5">Order Confirmed</h1>
+                <p class="lead opacity-75">Thank you for choosing Dr.milk Premium Dairy</p>
+                <div class="mt-4 no-print">
+                    <button class="btn-premium btn-accent rounded-pill px-4" onclick="window.print()">
+                        <i class="bi bi-printer me-2"></i> Print Invoice
+                    </button>
+                    <a href="/" class="btn-premium rounded-pill px-4 ms-2">Back to Shop</a>
+                </div>
+            </div>
+
+            <div class="invoice-body">
+                <div class="row mb-5">
+                    <div class="col-6">
+                        <span class="product-category">Deliver To</span>
+                        <h4 class="mt-2">{{ username }}</h4>
+                        <p class="text-muted small">Registered Address: <br> Bhavnagar, Gujarat, India</p>
+                    </div>
+                    <div class="col-6 text-end">
+                        <span class="product-category">Order Info</span>
+                        <h4 class="mt-2 text-primary">ID: #{{ order_id }}</h4>
+                        <p class="text-muted small">Placed on: {{ order_date }}</p>
+                    </div>
+                </div>
+
+                <table class="table table-premium mb-5">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Variety</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in invoice_items %}
+                        <tr>
+                            <td><strong>{{ item.name }}</strong></td>
+                            <td class="text-muted">{{ item.size }}</td>
+                            <td class="text-center">{{ item.quantity }}</td>
+                            <td class="text-end fw-bold">₹{{ item.item_total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="row justify-content-end">
+                    <div class="col-md-5">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Subtotal</span>
+                            <span class="fw-bold">₹{{ total_amount }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="text-muted">Conveyance</span>
+                            <span class="text-success fw-bold">Free Delivery</span>
+                        </div>
+                        <div class="d-flex justify-content-between pt-3 border-top">
+                            <h4 class="text-primary">Grand Total</h4>
+                            <h4 class="text-primary">₹{{ total_amount }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-footer">
+                <div>
+                    <h5 class="brand-logo mb-0">Dr.milk</h5>
+                    <p class="small text-muted mb-0">The Gold Standard of Dairy.</p>
+                </div>
+                <div class="text-end">
+                    <p class="small text-muted mb-0">Need help? <br> <strong>support@drmilk.in</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+>>>>>>> 674038acaea1553ff7758abf94159b647b581115
 </html>

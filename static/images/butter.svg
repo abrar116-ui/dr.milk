@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <defs>
     <linearGradient id="grad7" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -29,4 +30,37 @@
   
   <!-- Text -->
   <text x="100" y="190" font-family="Arial" font-size="12" fill="#2c5f2d" text-anchor="middle" font-weight="bold">BUTTER</text>
+=======
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="grad7" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fffbf0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffefd5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" fill="#fffef9"/>
+  
+  <!-- Container (rectangular butter block) -->
+  <path d="M 50 80 L 50 130 Q 50 160 70 170 L 130 170 Q 150 160 150 130 L 150 80 Q 140 70 100 70 Q 60 70 50 80 Z" fill="url(#grad7)" stroke="#2c5f2d" stroke-width="2.5"/>
+  
+  <!-- Butter texture -->
+  <g opacity="0.7">
+    <circle cx="65" cy="95" r="3" fill="#daa520"/>
+    <circle cx="85" cy="105" r="2.5" fill="#daa520"/>
+    <circle cx="115" cy="100" r="3" fill="#daa520"/>
+    <circle cx="130" cy="115" r="2" fill="#daa520"/>
+    <circle cx="75" cy="130" r="2.5" fill="#daa520"/>
+    <circle cx="105" cy="140" r="3" fill="#daa520"/>
+  </g>
+  
+  <!-- Highlight/shine -->
+  <ellipse cx="70" cy="85" rx="20" ry="15" fill="white" opacity="0.4"/>
+  <ellipse cx="125" cy="120" rx="15" ry="10" fill="white" opacity="0.3"/>
+  
+  <!-- Wrapper/label line -->
+  <line x1="50" y1="105" x2="150" y2="105" stroke="#c99870" stroke-width="1.5" opacity="0.5"/>
+  
+  <!-- Text -->
+  <text x="100" y="190" font-family="Arial" font-size="12" fill="#2c5f2d" text-anchor="middle" font-weight="bold">BUTTER</text>
+>>>>>>> 674038acaea1553ff7758abf94159b647b581115
 </svg>

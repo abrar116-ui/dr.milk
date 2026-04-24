@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -268,4 +269,210 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products - Dr.milk Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 1rem;
+        }
+
+        .sidebar-link {
+            color: #bdc3c7;
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            display: block;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background-color: #34495e;
+            color: white;
+            border-left-color: #3498db;
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar px-0">
+                <div class="text-center mb-4">
+                    <h3>Dr.milk</h3>
+                </div>
+                <nav>
+                    <a href="{{ url_for('admin_dashboard') }}" class="sidebar-link">
+                        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('admin_products') }}" class="sidebar-link active">
+                        <i class="bi bi-box me-2"></i> Products
+                    </a>
+                    <a href="{{ url_for('admin_orders') }}" class="sidebar-link">
+                        <i class="bi bi-cart-check me-2"></i> Orders
+                    </a>
+                    <a href="/" class="sidebar-link">
+                        <i class="bi bi-house me-2"></i> View Site
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="sidebar-link text-danger mt-4">
+                        <i class="bi bi-box-arrow-left me-2"></i> Logout
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 px-0">
+                <div class="main-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Product Management</h4>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                            <i class="bi bi-plus-lg me-2"></i> Add New Product
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Category</th>
+                                            <th>Prices</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for product in products %}
+                                        <tr>
+                                            <td>{{ product.id }}</td>
+                                            <td><img src="{{ product.image if product.image.startswith('http') else url_for('static', filename='images/' + product.image) }}"
+                                                    width="40" height="40" class="rounded shadow-sm"></td>
+                                            <td>{{ product.name }}</td>
+                                            <td>{{ product.category }}</td>
+                                            <td>
+                                                {% for variant in product.variants %}
+                                                <small class="badge bg-light text-dark">{{ variant.size }}: ₹{{
+                                                    variant.price }}</small>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="{{ url_for('admin_delete_product', id=product.id) }}"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Delete this product?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ url_for('admin_add_product') }}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Product Name</label>
+                                <input type="text" name="name" class="form-control" required
+                                    placeholder="e.g. Buffalo Milk">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Category</label>
+                                <select name="category" class="form-select">
+                                    <option value="Milk">Milk</option>
+                                    <option value="Ghee">Ghee</option>
+                                    <option value="Dairy">Dairy Products</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Description</label>
+                                <textarea name="description" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Upload Image File</label>
+                                <input type="file" name="image_file" class="form-control" accept="image/*">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">OR Image URL/Filename</label>
+                                <input type="text" name="image" class="form-control"
+                                    placeholder="filename.jpg or http://...">
+                            </div>
+                            <hr>
+                            <h6>Prices & Sizes</h6>
+                            <div class="col-md-6">
+                                <label class="form-label">Size 1 (e.g., 500ml)</label>
+                                <input type="text" name="size1" class="form-control" placeholder="500ml" required>
+                                <label class="form-label mt-2">Price 1</label>
+                                <input type="number" name="price1" class="form-control" placeholder="60" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Size 2 (Optional - e.g., 1ltr)</label>
+                                <input type="text" name="size2" class="form-control" placeholder="1ltr">
+                                <label class="form-label mt-2">Price 2</label>
+                                <input type="number" name="price2" class="form-control" placeholder="110">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+>>>>>>> 674038acaea1553ff7758abf94159b647b581115
 </html>

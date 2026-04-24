@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -164,4 +165,156 @@
     </script>
 </body>
 
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Dr.milk | Premium Dairy</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .checkout-container {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            padding: 4rem 0;
+        }
+
+        .checkout-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #1A3C34;
+            text-decoration: none;
+        }
+
+        .btn-confirm {
+            background-color: #D4AF37;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .btn-confirm:hover {
+            background-color: #B8962D;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-white py-3 shadow-sm">
+        <div class="container text-center">
+            <a class="brand-logo w-100" href="/">Dr.milk</a>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="checkout-card">
+                        <h2 class="mb-4">Complete Your Order</h2>
+                        <form action="/checkout" method="POST" id="checkoutForm">
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">Delivery Address</label>
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <p class="mb-1"><strong>{{ current_user.username }}</strong></p>
+                                        <p class="mb-1 text-muted">{{ current_user.phone }}</p>
+                                        <p class="mb-0 text-muted">{{ current_user.address }}, {{ current_user.society
+                                            }}, {{ current_user.block }}-{{ current_user.flat_number }}</p>
+                                    </div>
+                                    <a href="/profile" class="small mt-2 d-inline-block">Edit delivery details</a>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Preferred Delivery Timing</label>
+                                    <select class="form-select p-3 rounded-3" name="delivery_time">
+                                        <option value="Morning" selected>Morning (6:00 AM - 8:30 AM)</option>
+                                        <option value="Evening">Evening (6:00 PM - 8:30 PM)</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">Subscription Days</label>
+                                    <div class="d-flex flex-wrap gap-2" id="daysContainer">
+                                        {% for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] %}
+                                        <div class="form-check form-check-inline m-0">
+                                            <input class="btn-check" type="checkbox" name="days" id="day-{{ day }}"
+                                                value="{{ day }}">
+                                            <label class="btn btn-outline-primary rounded-pill px-4 py-2"
+                                                for="day-{{ day }}">{{ day }}</label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <input type="hidden" name="delivery_days" id="delivery_days_json">
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <div class="mb-4">
+                                <h5 class="mb-3">Order Summary</h5>
+                                <div class="bg-light p-4 rounded-4">
+                                    <div class="order-summary-item">
+                                        <span>Total Payable</span>
+                                        <span class="fw-bold fs-4">₹{{ total_amount }}*</span>
+                                    </div>
+                                    <p class="small text-muted mb-0">* Final amount will be calculated based on selected
+                                        products and subscription duration.</p>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-confirm" onclick="prepareSubmit()">
+                                <i class="bi bi-shield-check me-2"></i> Confirm Order & Subscribe
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function prepareSubmit() {
+            const selectedDays = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(cb => cb.value);
+            document.getElementById('delivery_days_json').value = JSON.stringify(selectedDays);
+        }
+    </script>
+</body>
+
+>>>>>>> 674038acaea1553ff7758abf94159b647b581115
 </html>

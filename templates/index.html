@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -419,4 +420,426 @@
     </script>
 </body>
 
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dr.milk - Premium Farm Fresh A2 Milk Delivered in Glass Bottles">
+    <title>Dr.milk | Pure Farm Fresh Dairy Luxury</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom Premium CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid px-5">
+            <a class="brand-logo" href="#home">Dr.milk</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">Our Story</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#products">Shop</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="javascript:void(0)" onclick="toggleCart()">
+                            <i class="bi bi-cart3 fs-5"></i>
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                id="cart-count">
+                                {{ session['cart']|length if session['cart'] else 0 }}
+                            </span>
+                        </a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item ms-lg-4">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                {{ current_user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm mt-3">
+                                <li><a class="dropdown-item" href="/profile"><i class="bi bi-person-circle me-2"></i>My
+                                        Profile</a></li>
+                                <li><a class="dropdown-item" href="/orders"><i
+                                            class="bi bi-clock-history me-2"></i>Orders</a></li>
+                                {% if current_user.role == 'admin' %}
+                                <li><a class="dropdown-item" href="/admin"><i
+                                            class="bi bi-shield-lock me-2"></i>Admin</a></li>
+                                {% endif %}
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="/logout"><i
+                                            class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="nav-item ms-lg-4"><a href="/login" class="btn-premium">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content container-custom">
+            <h1 class="hero-title">Purity in Every <br> <span style="color: var(--accent);">Gold Droplet</span></h1>
+            <p class="hero-subtitle">Experience the luxury of farm-fresh A2 milk, delivered in chilled glass bottles
+                directly to your doorstep within hours of milking.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#products" class="btn-premium">Shop Fresh Now</a>
+                <a href="#about" class="btn-premium btn-accent">Our Source</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats/Trust Section -->
+    <section class="py-5 bg-cream">
+        <div class="container-custom">
+            <div class="row text-center g-4">
+                <div class="col-md-3">
+                    <h2 class="mb-0">100%</h2>
+                    <p class="text-muted">Pure & Natural</p>
+                </div>
+                <div class="col-md-3">
+                    <h2 class="mb-0">2Hr</h2>
+                    <p class="text-muted">Farm to Home</p>
+                </div>
+                <div class="col-md-3">
+                    <h2 class="mb-0">A2</h2>
+                    <p class="text-muted">Certified Protein</p>
+                </div>
+                <div class="col-md-3">
+                    <h2 class="mb-0">Zero</h2>
+                    <p class="text-muted">Plastic Used</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products">
+        <div class="container-custom">
+            <div class="text-center mb-5">
+                <span class="product-category">The Collection</span>
+                <h2 class="display-4">Farm Fresh Selection</h2>
+            </div>
+
+            <!-- Filters -->
+            <div class="d-flex justify-content-center gap-2 mb-5">
+                <a href="/#products"
+                    class="btn-premium rounded-pill py-2 px-4 shadow-none {{ 'btn-accent' if not request.args.get('category') else 'bg-transparent text-dark border-dark' }}">All</a>
+                <a href="/?category=Milk#products"
+                    class="btn-premium rounded-pill py-2 px-4 shadow-none {{ 'btn-accent' if request.args.get('category') == 'Milk' else 'bg-transparent text-dark border-dark' }}">Milk</a>
+                <a href="/?category=Ghee#products"
+                    class="btn-premium rounded-pill py-2 px-4 shadow-none {{ 'btn-accent' if request.args.get('category') == 'Ghee' else 'bg-transparent text-dark border-dark' }}">Ghee</a>
+                <a href="/?category=Dairy#products"
+                    class="btn-premium rounded-pill py-2 px-4 shadow-none {{ 'btn-accent' if request.args.get('category') == 'Dairy' else 'bg-transparent text-dark border-dark' }}">Dairy</a>
+            </div>
+
+            <div class="product-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <span class="product-badge">New Fresh</span>
+                    <div class="product-image-container">
+                        {% if product.image.startswith('http') %}
+                        <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}"
+                            class="product-image">
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <span class="product-category">{{ product.category }}</span>
+                        <h3 class="product-title">{{ product.name }}</h3>
+                        <p class="product-desc">{{ product.description }}</p>
+
+                        <!-- Subscription Toggle (Conceptual) -->
+                        <div class="subscription-toggle">
+                            <div class="sub-btn active" onclick="toggleSub(this, 'once')">Once</div>
+                            <div class="sub-btn" onclick="toggleSub(this, 'daily')">Subscribe <br><small
+                                    style="font-size: 0.6rem;">Save 10%</small></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <select class="form-select border-0 bg-light p-3" id="size-{{ product.id }}">
+                                <option value="">Select Size</option>
+                                {% for size, price in product.prices.items() %}
+                                <option value="{{ size }}"> {{ size }} — ₹{{ price }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="product-price-row">
+                            <span class="price-tag">₹{{ product.prices.values()|first }}</span>
+                            <button class="btn-premium btn-accent" onclick="addToCart({{ product.id }})">
+                                <i class="bi bi-bag-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Subscription Builder -->
+    <section class="bg-primary py-5 text-white" id="subscribe">
+        <div class="container-custom">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5">
+                    <span class="product-category" style="color: var(--accent);">Personal Concierge</span>
+                    <h2 class="display-5 fw-bold text-white mb-4">Design Your Daily Freshness</h2>
+                    <p class="opacity-75 mb-5">Customize your dairy delivery to match your lifestyle. Choose your
+                        preferred milk, volume, and schedule in one step.</p>
+                    <div class="d-flex gap-4 mb-4">
+                        <div class="text-center">
+                            <i class="bi bi-clock-history fs-1 text-accent d-block mb-2"></i>
+                            <span class="small fw-bold">Flexible Timing</span>
+                        </div>
+                        <div class="text-center">
+                            <i class="bi bi-calendar-check fs-1 text-accent d-block mb-2"></i>
+                            <span class="small fw-bold">Select Days</span>
+                        </div>
+                        <div class="text-center">
+                            <i class="bi bi-droplet-half fs-1 text-accent d-block mb-2"></i>
+                            <span class="small fw-bold">Custom Volume</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="glass-card p-5 text-dark bg-white rounded-5 shadow-lg">
+                        <form id="subscriptionForm">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Milk Type</label>
+                                    <select class="form-select border-0 bg-cream p-3 rounded-4" id="milkType">
+                                        <option value="A2 Cow Milk">A2 Cow Milk (₹110/L)</option>
+                                        <option value="Buffalo Milk Gold">Buffalo Milk Gold (₹130/L)</option>
+                                        <option value="Buffalo Milk Gold+">Buffalo Milk Gold+ (₹150/L)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Daily Volume
+                                        (Litres)</label>
+                                    <input type="number" class="form-control border-0 bg-cream p-3 rounded-4"
+                                        id="milkQty" value="1" min="1" max="10">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Delivery
+                                        Timing</label>
+                                    <div class="d-flex gap-2">
+                                        <input type="radio" class="btn-check" name="sub-time" id="sub-morning"
+                                            value="Morning" checked>
+                                        <label class="btn btn-outline-primary rounded-pill w-100 py-2"
+                                            for="sub-morning">Morning</label>
+                                        <input type="radio" class="btn-check" name="sub-time" id="sub-evening"
+                                            value="Evening">
+                                        <label class="btn btn-outline-primary rounded-pill w-100 py-2"
+                                            for="sub-evening">Evening</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Select Delivery
+                                        Days</label>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] %}
+                                        <div class="form-check form-check-inline m-0">
+                                            <input class="btn-check" type="checkbox" id="day-{{ day }}"
+                                                value="{{ day }}" checked>
+                                            <label class="btn btn-outline-primary rounded-circle p-0"
+                                                style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;"
+                                                for="day-{{ day }}">{{ day[0] }}</label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mt-4">
+                                    <button type="button" class="btn-premium btn-accent w-100 py-3 rounded-4 shadow-sm"
+                                        onclick="submitSubscription()">Activate Subscription</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="bg-cream">
+        <div class="container-custom">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=1200&auto=format&fit=crop"
+                        class="img-fluid rounded-4 shadow-lg" alt="Our Farm">
+                </div>
+                <div class="col-lg-6 ps-lg-5">
+                    <span class="product-category">Our Heritage</span>
+                    <h2 class="display-3 mb-4">Born in Nature, <br> Raised with Care</h2>
+                    <p class="lead mb-4">Dr.milk isn't just dairy; it's a commitment to a healthier lifestyle. Our cows
+                        are grass-fed and treated like family in our state-of-the-art ethical farm.</p>
+                    <div class="row g-4">
+                        <div class="col-6">
+                            <i class="bi bi-shield-check fs-2 text-success"></i>
+                            <h5 class="mt-2">Lab Tested</h5>
+                            <p class="small text-muted">Weekly rigorous testing for 40+ parameters.</p>
+                        </div>
+                        <div class="col-6">
+                            <i class="bi bi-droplet fs-2 text-primary"></i>
+                            <h5 class="mt-2">Glass Only</h5>
+                            <p class="small text-muted">Aqueous washing for medical-grade sterilization.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="mb-0">Your Basket</h3>
+            <button class="btn border-0" onclick="toggleCart()"><i class="bi bi-x-lg fs-4"></i></button>
+        </div>
+        <div class="flex-grow-1 overflow-auto" id="cart-drawer-items">
+            <!-- Items will be injected here via JS if desired, for now linking to page -->
+            <div class="text-center py-5">
+                <i class="bi bi-cart3 display-1 text-muted"></i>
+                <p class="mt-3">Ready to checkout?</p>
+                <a href="/cart" class="btn-premium">View Full Cart</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container-custom">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <h4 class="brand-logo text-white mb-4">Dr.milk</h4>
+                    <p class="text-muted">The zenith of dairy production. From our farm to your glass, pure and
+                        untouched.</p>
+                </div>
+                <div class="col-lg-2">
+                    <h5>Explore</h5>
+                    <ul class="list-unstyled text-muted mt-3">
+                        <li><a href="#" class="text-reset text-decoration-none">Home</a></li>
+                        <li><a href="#about" class="text-reset text-decoration-none">Story</a></li>
+                        <li><a href="#products" class="text-reset text-decoration-none">Shop</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled text-muted mt-3">
+                        <li>info@drmilk.in</li>
+                        <li>+91 7359238846</li>
+                        <li>Bhavnagar, Gujarat</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 text-lg-end">
+                    <h5>Follow the Journey</h5>
+                    <div class="d-flex justify-content-lg-end gap-3 mt-3">
+                        <a href="#" class="text-white fs-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white fs-4"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white fs-4"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleCart() {
+            document.getElementById('cartDrawer').classList.toggle('open');
+            document.querySelector('.cart-overlay').classList.toggle('show');
+        }
+
+        function toggleSub(el, type) {
+            const btns = el.parentElement.querySelectorAll('.sub-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function addToCart(productId) {
+            const size = document.getElementById(`size-${productId}`).value;
+            if (!size) {
+                alert('Please select a size first');
+                return;
+            }
+
+            fetch('/add_to_cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ product_id: productId, size: size, quantity: 1 })
+            })
+                .then(res => {
+                    if (res.status === 401) {
+                        window.location.href = '/login';
+                        return;
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        location.reload();
+                    }
+                });
+        }
+
+        function submitSubscription() {
+            const milkType = document.getElementById('milkType').value;
+            const quantity = document.getElementById('milkQty').value;
+            const timing = document.querySelector('input[name="sub-time"]:checked').value;
+            const days = Array.from(document.querySelectorAll('.btn-check:checked'))
+                .map(cb => cb.value)
+                .filter(v => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].includes(v));
+
+            if (days.length === 0) {
+                alert('Please select at least one delivery day');
+                return;
+            }
+
+            // Map milk type name to actual product ID (demo fallback to 1)
+            let productId = 1;
+            if (milkType.includes('Buffalo')) productId = 2;
+            if (milkType.includes('Gold+')) productId = 3;
+
+            fetch('/add_to_cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    product_id: productId,
+                    size: '1ltr',
+                    quantity: quantity,
+                    meta: { type: milkType, time: timing, days: days }
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Subscription Preferences Saved! Redirecting to cart...');
+                        window.location.href = '/cart';
+                    }
+                });
+        }
+    </script>
+</body>
+
+>>>>>>> 674038acaea1553ff7758abf94159b647b581115
 </html>

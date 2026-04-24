@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <defs>
     <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -27,4 +28,35 @@
   
   <!-- Text -->
   <text x="100" y="185" font-family="Arial" font-size="10" fill="#2c5f2d" text-anchor="middle" font-weight="bold">BUFFALO GOLD+</text>
+=======
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff5e8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffd99b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" fill="#fffbf5"/>
+  
+  <!-- Bottle outline -->
+  <path d="M 70 50 L 65 80 Q 65 140 75 160 L 125 160 Q 135 140 135 80 L 130 50 Z" fill="url(#grad3)" stroke="#4a7c4e" stroke-width="2"/>
+  
+  <!-- Milk inside bottle - very creamy -->
+  <path d="M 72 95 Q 72 140 80 155 L 120 155 Q 128 140 128 95 Z" fill="#e8c575" opacity="0.95"/>
+  
+  <!-- Bottle cap with premium indicator -->
+  <rect x="68" y="40" width="64" height="12" fill="#2c5f2d" rx="2"/>
+  <rect x="65" y="35" width="70" height="6" fill="#1a3b1b" rx="2"/>
+  <circle cx="90" cy="41" r="3" fill="#f0ad4e"/>
+  <circle cx="110" cy="41" r="3" fill="#f0ad4e"/>
+  
+  <!-- Shine effect -->
+  <ellipse cx="85" cy="70" rx="8" ry="15" fill="white" opacity="0.5"/>
+  
+  <!-- Plus indicator -->
+  <text x="145" y="50" font-family="Arial" font-size="20" fill="#f0ad4e" font-weight="bold">+</text>
+  
+  <!-- Text -->
+  <text x="100" y="185" font-family="Arial" font-size="10" fill="#2c5f2d" text-anchor="middle" font-weight="bold">BUFFALO GOLD+</text>
+>>>>>>> 674038acaea1553ff7758abf94159b647b581115
 </svg>
