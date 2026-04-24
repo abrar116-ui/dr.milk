@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management | Dr.milk Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        :root {
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            z-index: 1000;
+        }
+
+        .admin-main {
+            margin-left: var(--sidebar-width);
+            padding: 3rem;
+        }
+
+        .side-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+        }
+
+        .side-link:hover,
+        .side-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .glass-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .user-row:hover {
+            background-color: #fcfcfc;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-sidebar">
+        <div class="mb-5 px-3">
+            <h2 class="brand-logo text-white">Dr.milk</h2>
+            <span class="product-category" style="color: var(--accent);">Admin Suite</span>
+        </div>
+        <nav>
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="side-link">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a href="{{ url_for('admin.admin_users') }}" class="side-link active">
+                <i class="bi bi-people"></i> Users
+            </a>
+            <a href="{{ url_for('admin.admin_products') }}" class="side-link">
+                <i class="bi bi-box-seam"></i> Inventory
+            </a>
+            <a href="{{ url_for('admin.admin_orders') }}" class="side-link">
+                <i class="bi bi-receipt"></i> Orders
+            </a>
+            <a href="{{ url_for('admin.admin_quick_delivery') }}" class="side-link">
+                <i class="bi bi-lightning-charge"></i> Quick Delivery
+            </a>
+        </nav>
+    </div>
+
+    <div class="admin-main">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="display-6 mb-1">User Directory</h1>
+                <p class="text-muted">Manage registered customers and view their profiles.</p>
+            </div>
+            <a href="{{ url_for('admin.export_report', report_type='users') }}" class="btn btn-outline-primary rounded-pill">
+                <i class="bi bi-file-earmark-excel me-2"></i> Export CSV
+            </a>
+        </div>
+
+        <div class="glass-card">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Orders</th>
+                            <th>Member Since</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr class="user-row">
+                            <td class="small text-muted">#{{ user.id }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary-subtle text-primary rounded-circle p-2 me-2"
+                                        style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">
+                                        {{ user.username[0]|upper }}
+                                    </div>
+                                    <span class="fw-bold">{{ user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ user.phone or '-' }}</td>
+                            <td>
+                                {% if user.is_active %}
+                                <span class="badge bg-success-subtle text-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.orders|length }}</td>
+                            <td class="small">{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <a href="{{ url_for('admin.admin_user_profile', user_id=user.id) }}"
+                                    class="btn btn-sm btn-outline-primary">View Profile</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

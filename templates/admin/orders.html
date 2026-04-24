@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders | Dr.milk Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Premium CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        :root {
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #2c3e50;
+        }
+
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            z-index: 1000;
+        }
+
+        .admin-main {
+            margin-left: var(--sidebar-width);
+            padding: 3rem;
+        }
+
+        .side-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .side-link:hover,
+        .side-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .side-link i {
+            font-size: 1.2rem;
+            margin-right: 12px;
+        }
+
+        .glass-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            height: 100%;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .export-btn {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background: #f8f9fa;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+        <div class="mb-5 px-3">
+            <h2 class="brand-logo text-white">Dr.milk</h2>
+            <span class="product-category" style="color: var(--accent);">Admin Suite</span>
+        </div>
+
+        <nav>
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="side-link">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a href="{{ url_for('admin.admin_users') }}" class="side-link">
+                <i class="bi bi-people"></i> Users
+            </a>
+            <a href="{{ url_for('admin.admin_products') }}" class="side-link">
+                <i class="bi bi-box-seam"></i> Inventory
+            </a>
+            <a href="{{ url_for('admin.admin_orders') }}" class="side-link active">
+                <i class="bi bi-receipt"></i> Orders
+            </a>
+            <a href="{{ url_for('admin.admin_quick_delivery') }}" class="side-link">
+                <i class="bi bi-lightning-charge"></i> Quick Delivery
+            </a>
+            <hr class="opacity-10 my-4">
+            <a href="/" class="side-link">
+                <i class="bi bi-house"></i> View Site
+            </a>
+            <a href="{{ url_for('user.logout') }}" class="side-link text-danger">
+                <i class="bi bi-power"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+            <div class="admin-main">
+                <div class="main-content">
+                    <h4 class="mb-4">Order Management</h4>
+
+                    {% for day in display_orders %}
+                    <div class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary text-white rounded-pill px-4 py-2 shadow-sm">
+                                <h5 class="mb-0 fw-bold"><i class="bi bi-calendar3 me-2"></i>{{ day.date }}</h5>
+                            </div>
+                            <div class="ms-3 flex-grow-1 border-bottom"></div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="ps-4">Time</th>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Items</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th class="pe-4 text-end">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for order in day.orders %}
+                                            <tr>
+                                                <td class="ps-4">{{ order.created_at.strftime('%H:%M') }}</td>
+                                                <td><span class="fw-bold">{{ order.order_id }}</span></td>
+                                                <td>{{ order.user.username }}</td>
+                                                <td>
+                                                    <ul class="list-unstyled mb-0 small">
+                                                        {% for item in order.items %}
+                                                        <li>{{ item.product.name if item.product else 'Unknown Product'
+                                                            }} -
+                                                            {{ item.size }} (x{{ item.quantity }})
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </td>
+                                                <td class="fw-bold text-primary">₹{{ order.total_amount }}</td>
+                                                <td>
+                                                    <form
+                                                        action="{{ url_for('admin.update_order_status', order_id=order.id) }}"
+                                                        method="POST" class="d-flex gap-2">
+                                                        <select name="status" class="form-select form-select-sm"
+                                                            style="width: auto;">
+                                                            <option value="Pending" {{ 'selected' if
+                                                                order.status=='Pending' }}>Pending</option>
+                                                            <option value="Processing" {{ 'selected' if
+                                                                order.status=='Processing' }}>Processing</option>
+                                                            <option value="Out for Delivery" {{ 'selected' if
+                                                                order.status=='Out for Delivery' }}>Out for Delivery
+                                                            </option>
+                                                            <option value="Delivered" {{ 'selected' if
+                                                                order.status=='Delivered' }}>Delivered</option>
+                                                            <option value="Cancelled" {{ 'selected' if
+                                                                order.status=='Cancelled' }}>Cancelled</option>
+                                                        </select>
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-primary">Update</button>
+                                                    </form>
+                                                </td>
+                                                <td class="pe-4 text-end">
+                                                    <a href="{{ url_for('admin.admin_delete_order', id=order.id) }}"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Delete this order?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

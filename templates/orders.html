@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Legacy | Dr.milk Orders</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom Premium CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 2rem;
+            padding: 0 1rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #eee;
+            z-index: 1;
+        }
+
+        .timeline-step {
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            border: 2px solid #eee;
+            border-radius: 50%;
+            z-index: 2;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .timeline-step.active {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .timeline-label {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            white-space: nowrap;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body class="bg-cream">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid px-5">
+            <a class="brand-logo" href="/">Dr.milk</a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <a href="/profile" class="nav-link"><i class="bi bi-person-circle me-1"></i>My Profile</a>
+                <a href="/" class="nav-link">Return to Shop</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-custom py-5">
+        <div class="text-center mb-5">
+            <span class="product-category">Account History</span>
+            <h2 class="display-4">Your Recent Orders</h2>
+        </div>
+
+        {% if today_orders or tomorrow_orders or all_orders %}
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                {# History Section Grouped by Date #}
+                {% if display_history %}
+                <div class="mt-5">
+                    <h3 class="fw-bold mb-4 text-secondary"><i class="bi bi-clock-history me-2"></i>Recent Transactions
+                    </h3>
+
+                    {% for day in display_history %}
+                    <div class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span
+                                class="badge rounded-pill bg-cream text-primary border border-primary px-3 py-2 small fw-bold">
+                                {{ day.date }}
+                            </span>
+                            <div class="ms-3 flex-grow-1 border-bottom opacity-25"></div>
+                        </div>
+
+                        {% for order in day.orders %}
+                        {% include 'includes/_order_card.html' %}
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {# Tomorrow's Section #}
+                {% if tomorrow_orders %}
+                <div class="mb-5">
+                    <h3 class="fw-bold mb-4 text-accent"><i class="bi bi-calendar-plus me-2"></i>Tomorrow's Deliveries
+                    </h3>
+                    {% for order in tomorrow_orders %}
+                    {% include 'includes/_order_card.html' %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {# All History Section #}
+                <div class="mb-5">
+                    <h3 class="fw-bold mb-4">Recent Transactions</h3>
+                    {% for order in all_orders %}
+                    <div class="product-card mb-4 opacity-75 hover-opacity-100 transition-smooth">
+                        <div class="row g-0">
+                            <div class="col-md-3 bg-light p-4 border-end">
+                                <p class="small text-muted mb-1 text-uppercase">Ordered On</p>
+                                <h6 class="fw-bold">{{ order.created_at.strftime('%d %b %Y') }}</h6>
+                                <p class="small text-muted mb-1 mt-3 text-uppercase">Amount</p>
+                                <h5 class="mb-0 text-primary">₹{{ order.total_amount }}</h5>
+                            </div>
+                            <div class="col-md-9 p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-muted small">ORDER #{{ order.order_id }}</span>
+                                    <span class="badge bg-secondary">{{ order.status }}</span>
+                                </div>
+                                <div class="small">
+                                    {% for item in order.items %}
+                                    <span class="me-3"><i class="bi bi-check2-circle text-success me-1"></i>{{
+                                        item.product.name }} ({{ item.size }})</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-box-seam display-1 text-muted"></i>
+            <h3 class="mt-4">Your basket is waiting</h3>
+            <p class="text-muted">You haven't placed any orders yet. Experience our premium dairy today.</p>
+            <a href="/#products" class="btn-premium mt-3">Explore Collection</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Analytics | Dr.milk Admin</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Premium CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        :root {
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #2c3e50;
+        }
+
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            z-index: 1000;
+        }
+
+        .admin-main {
+            margin-left: var(--sidebar-width);
+            padding: 3rem;
+        }
+
+        .side-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .side-link:hover,
+        .side-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .side-link i {
+            font-size: 1.2rem;
+            margin-right: 12px;
+        }
+
+        .glass-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            height: 100%;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .export-btn {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background: #f8f9fa;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+        <div class="mb-5 px-3">
+            <h2 class="brand-logo text-white">Dr.milk</h2>
+            <span class="product-category" style="color: var(--accent);">Admin Suite</span>
+        </div>
+
+        <nav>
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="side-link active">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a href="{{ url_for('admin.admin_users') }}" class="side-link">
+                <i class="bi bi-people"></i> Users
+            </a>
+            <a href="{{ url_for('admin.admin_products') }}" class="side-link">
+                <i class="bi bi-box-seam"></i> Inventory
+            </a>
+            <a href="{{ url_for('admin.admin_orders') }}" class="side-link">
+                <i class="bi bi-receipt"></i> Orders
+            </a>
+            <a href="{{ url_for('admin.admin_quick_delivery') }}" class="side-link">
+                <i class="bi bi-lightning-charge"></i> Quick Delivery
+            </a>
+            <hr class="opacity-10 my-4">
+            <a href="/" class="side-link">
+                <i class="bi bi-house"></i> View Site
+            </a>
+            <a href="{{ url_for('user.logout') }}" class="side-link text-danger">
+                <i class="bi bi-power"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="display-6 mb-1">Executive Analytics</h1>
+                <p class="text-muted">Real-time dairy distribution and business intelligence.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <div class="dropdown">
+                    <button class="export-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-download me-2"></i> Export Reports
+                    </button>
+                    <ul class="dropdown-menu shadow">
+                        <li><a class="dropdown-item" href="{{ url_for('admin.export_report', report_type='users') }}">User
+                                Activity Sheet</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin.export_report', report_type='orders') }}">Daily
+                                Order Sheet</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin.export_report', report_type='orders') }}">Monthly
+                                Sales Report</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="glass-card text-center">
+                    <span class="stat-label">Total Users</span>
+                    <div class="stat-value text-primary">{{ stats.total_users }}</div>
+                    <div class="small text-success"><i class="bi bi-person-check-fill"></i> {{ stats.active_users }}
+                        Active</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card text-center">
+                    <span class="stat-label">Today's Revenue</span>
+                    <div class="stat-value text-success">₹{{ stats.today_revenue|int }}</div>
+                    <div class="small text-muted">₹{{ stats.total_revenue|int }} All-time</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card text-center">
+                    <span class="stat-label">Liters Delivered</span>
+                    <div class="stat-value text-warning">{{ stats.milk_today }}L</div>
+                    <div class="small text-muted">Distribution today</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card text-center">
+                    <span class="stat-label">Orders Today</span>
+                    <div class="stat-value text-danger">{{ stats.orders_today }}</div>
+                    <div class="small text-muted">{{ stats.orders_yesterday }} yesterday</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Charts -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8">
+                <div class="glass-card">
+                    <h5 class="mb-4">Milk Delivery Trends (Litres/Day)</h5>
+                    <div class="chart-container">
+                        <canvas id="milkChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="glass-card">
+                    <h5 class="mb-4">User Status</h5>
+                    <div class="chart-container">
+                        <canvas id="userStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Logs -->
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="glass-card">
+                    <h5 class="mb-4">Daily Activity</h5>
+                    <ul class="list-unstyled">
+                        <li class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                            <span>Logins Today</span>
+                            <span class="fw-bold">{{ stats.logins_today }}</span>
+                        </li>
+                        <li class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                            <span>Logouts Today</span>
+                            <span class="fw-bold">{{ stats.logouts_today }}</span>
+                        </li>
+                        <li class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                            <span>Total Users</span>
+                            <span class="fw-bold text-primary">{{ stats.total_users }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="glass-card">
+                    <h5 class="mb-4">Recent Transactions</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr class="text-muted small">
+                                    <th>#Order</th>
+                                    <th>Client</th>
+                                    <th>Value</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                <tr>
+                                    <td class="fw-bold text-primary">#{{ order.order_id[-5:] }}</td>
+                                    <td>{{ order.user.username }}</td>
+                                    <td class="fw-bold">₹{{ order.total_amount }}</td>
+                                    <td>
+                                        <span
+                                            class="badge rounded-pill {% if order.status == 'Delivered' %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} px-3">
+                                            {{ order.status }}
+                                        </span>
+                                    </td>
+                                    <td class="text-muted small">{{ order.created_at.strftime('%H:%M') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Data from backend
+        const chartData = {{ chart_data| tojson }};
+
+        // Milk Delivery Chart
+        const ctxMilk = document.getElementById('milkChart').getContext('2d');
+        new Chart(ctxMilk, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels,
+                datasets: chartData.datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    x: { stacked: false, grid: { display: false } },
+                    y: { stacked: false, beginAtZero: true }
+                }
+            }
+        });
+
+        // User Status Doughnut
+        const ctxUser = document.getElementById('userStatusChart').getContext('2d');
+        new Chart(ctxUser, {
+            type: 'doughnut',
+            data: {
+                labels: ['Active', 'Inactive'],
+                datasets: [{
+                    data: [{{ stats.active_users }}, {{ stats.total_users - stats.active_users }}],
+            backgroundColor: ['#1A3C34', '#ecf0f1']
+        }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+        }
+        });
+    </script>
+</body>
+
+</html>

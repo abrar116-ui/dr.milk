@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Delivery | Dr.milk Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        :root {
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            z-index: 1000;
+        }
+
+        .admin-main {
+            margin-left: var(--sidebar-width);
+            padding: 3rem;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .side-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+        }
+
+        .side-link:hover,
+        .side-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .glass-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .user-list-container {
+            max-height: 60vh;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .user-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-item:hover, .user-item.active {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .detail-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #888;
+            font-weight: 600;
+            margin-bottom: 0px;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        /* Premium custom scrollbar */
+        .user-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .user-list-container::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        .user-list-container::-webkit-scrollbar-thumb {
+            background: #ccc; 
+            border-radius: 10px;
+        }
+        .user-list-container::-webkit-scrollbar-thumb:hover {
+            background: #b3b3b3; 
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+        <div class="mb-5 px-3">
+            <h2 class="brand-logo text-white">Dr.milk</h2>
+            <span class="product-category" style="color: var(--accent);">Admin Suite</span>
+        </div>
+        <nav>
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="side-link">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a href="{{ url_for('admin.admin_users') }}" class="side-link">
+                <i class="bi bi-people"></i> Users
+            </a>
+            <a href="{{ url_for('admin.admin_products') }}" class="side-link">
+                <i class="bi bi-box-seam"></i> Inventory
+            </a>
+            <a href="{{ url_for('admin.admin_orders') }}" class="side-link">
+                <i class="bi bi-receipt"></i> Orders
+            </a>
+            <a href="{{ url_for('admin.admin_quick_delivery') }}" class="side-link active">
+                <i class="bi bi-lightning-charge"></i> Quick Delivery
+            </a>
+            <hr class="opacity-10 my-4">
+            <a href="/" class="side-link">
+                <i class="bi bi-house"></i> View Site
+            </a>
+            <a href="{{ url_for('user.logout') }}" class="side-link text-danger">
+                <i class="bi bi-power"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show rounded-4" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="display-6 mb-1">Quick Delivery</h1>
+                <p class="text-muted">Rapidly log your morning milk deliveries.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left Column: User Selection -->
+            <div class="col-md-5 col-lg-4">
+                <div class="glass-card p-4">
+                    <h5 class="mb-3">Select Customer</h5>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" id="userQuery" class="form-control border-start-0 ps-0" placeholder="Search by name..." onkeyup="filterUsers()">
+                    </div>
+                    
+                    <div class="user-list-container" id="userList">
+                        {% for user in users %}
+                        <div class="user-item d-flex align-items-center gap-3" data-uid="{{ user.id }}" data-uname="{{ user.username|lower }}" onclick="selectUser({{ user.id }})">
+                            <div class="user-avatar">
+                                {{ user.username[0]|upper }}
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ user.username }}</h6>
+                                {% if user.society or user.block %}
+                                <small class="text-muted">{{ user.society }} {{ user.block }}</small>
+                                {% else %}
+                                <small class="text-muted">No address info</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        {% if not users %}
+                        <div class="p-4 text-center text-muted">
+                            No customers found.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Delivery Details & Form -->
+            <div class="col-md-7 col-lg-8" style="display: none;" id="deliveryPanel">
+                <div class="glass-card p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <h5 class="mb-0">Customer Details</h5>
+                        <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">Selected</span>
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <p class="detail-label">Name</p>
+                            <p class="detail-value" id="dispName">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="detail-label">Phone</p>
+                            <p class="detail-value" id="dispPhone">-</p>
+                        </div>
+                        <div class="col-12">
+                            <p class="detail-label">Address</p>
+                            <p class="detail-value mb-1" id="dispAddress">-</p>
+                            <p class="detail-value">Society: <span id="dispSociety">-</span> &bull; Block: <span id="dispBlock">-</span> &bull; Flat: <span id="dispFlat">-</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4">
+                    <h5 class="mb-4">Log Delivery</h5>
+                    <form action="{{ url_for('admin.admin_quick_delivery') }}" method="POST">
+                        <input type="hidden" name="user_id" id="formUserId" value="">
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Select Product</label>
+                                <select class="form-select" name="product_id" id="productSelect" onchange="updateSizes()" required>
+                                    <option value="" disabled selected>-- Choose Product --</option>
+                                    {% for product in products %}
+                                    <option value="{{ product.id }}">{{ product.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Size/Variant</label>
+                                <select class="form-select" name="size" id="sizeSelect" required>
+                                    <option value="" disabled selected>-- Choose Size --</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold">Qty</label>
+                                <input type="number" class="form-control" name="quantity" value="1" min="1" required>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold text-white rounded-pill">
+                                <i class="bi bi-check2-circle me-2"></i> Confirm Delivery
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Empty state when no user selected -->
+            <div class="col-md-7 col-lg-8" id="emptyPanel">
+                <div class="glass-card p-5 text-center h-100 d-flex flex-column align-items-center justify-content-center">
+                    <div class="bg-primary-subtle text-primary rounded-circle mb-4" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                        <i class="bi bi-hand-index-thumb"></i>
+                    </div>
+                    <h4>Select a customer</h4>
+                    <p class="text-muted max-w-50 mx-auto">Click on a customer from the list on the left to view their details and log their dairy delivery.</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const usersData = {{ users_data|safe }};
+        const productsData = {{ products_data|safe }};
+        
+        function filterUsers() {
+            const query = document.getElementById('userQuery').value.toLowerCase();
+            const items = document.querySelectorAll('.user-item');
+            
+            items.forEach(item => {
+                const name = item.getAttribute('data-uname');
+                if(name.includes(query)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        function selectUser(userId) {
+            // Update active state in list
+            document.querySelectorAll('.user-item').forEach(item => item.classList.remove('active'));
+            const selectedElem = document.querySelector(`.user-item[data-uid="${userId}"]`);
+            if(selectedElem) selectedElem.classList.add('active');
+            
+            // Show panel
+            document.getElementById('emptyPanel').style.display = 'none';
+            document.getElementById('deliveryPanel').style.display = 'block';
+            
+            // Update form input
+            document.getElementById('formUserId').value = userId;
+            
+            // Render user details
+            const user = usersData[userId];
+            if(user) {
+                document.getElementById('dispName').innerText = user.name;
+                document.getElementById('dispPhone').innerText = user.phone;
+                document.getElementById('dispAddress').innerText = user.address;
+                document.getElementById('dispSociety').innerText = user.society;
+                document.getElementById('dispBlock').innerText = user.block;
+                document.getElementById('dispFlat').innerText = user.flat_number;
+            }
+        }
+        
+        function updateSizes() {
+            const prodId = document.getElementById('productSelect').value;
+            const sizeSelect = document.getElementById('sizeSelect');
+            
+            // Clear current options
+            sizeSelect.innerHTML = '<option value="" disabled selected>-- Choose Size --</option>';
+            
+            if(prodId && productsData[prodId]) {
+                const variants = productsData[prodId].variants;
+                variants.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.size;
+                    opt.textContent = `${v.size} (₹${v.price})`;
+                    sizeSelect.appendChild(opt);
+                });
+            }
+        }
+        
+        // Auto select first user if there is a queryParam like ?user_id=
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoUser = urlParams.get('user_id');
+        if(autoUser && usersData[autoUser]) {
+            selectUser(autoUser);
+        }
+    </script>
+</body>
+
+</html>
